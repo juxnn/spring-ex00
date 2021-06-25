@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="org.zerock.mapper.BoardMapper">
+
+
+
+	<sql id = "criteria">
+		<where>
+			<foreach item="type" separator="OR" collection="typeArr">
+				<choose>
+					<when test='type == "T"'>
+		    			title LIKE CONCAT('%', #{keyword}, '%')
+		    		</when>
+		    		<when test='type == "W"'>
+		    			writer LIKE CONCAT('%', #{keyword}, '%')
+		    		</when>
+		    		<when test='type == "C"'>
+			    		content LIKE CONCAT('%', #{keyword}, '%')
+		    		</when>
+	    		</choose>
+			</foreach>
+		</where>
+	</sql>
+
+  <select id="getList" resultType="org.zerock.domain.BoardVO">
+    <!-- table명 Bean명 -->
+    <!-- <!CDATA[]] 얘네는 대소문자 구분을 안한다 -->
+    <!-- 작성한 텍스트들이 XML 문법으로 해석될 수 있다. -->
+	
+    SELECT 
+    	bno bno,
+    	title title,
+    	content content,
+    	writer writer,
+    	regdate regdate,
+    	updatedate updateDate
+    FROM tbl_board
+    WHERE bno>0 ORDER BY bno DESC
+  </select>
+  
+  <select id="getListWithPaging" resultType="org.zerock.domain.BoardVO">
+    SELECT 
+    	bno bno,
+    	title title,
+    	content content,
+    	writer writer,
+    	regdate regdate,
+    	updatedate updateDate
+    FROM tbl_board
+
+	<include refid="criteria"></include>
+	
+    ORDER BY bno DESC
+
+    LIMIT #{from}, #{amount}
+     
+  </select>  
+  
+  <select id="getTotalCount" resultType="int">
+	SELECT COUNT(*) FROM tbl_board
+	<include refid="criteria"></include>  
+  </select>
+  
+  <insert id ="insert">
+  	INSERT INTO tbl_board (title, content, writer) 
+  	VALUES (#{title}, #{content}, #{writer})
+  </insert>
+  
+  <insert id="insertSelectKey" useGeneratedKeys="true" keyProperty="bno" keyColumn="bno">
+  	INSERT INTO tbl_board (title, content, writer) 
+  	VALUES (#{title}, #{content}, #{writer})
+  </insert>
+  
+  <select id="read" resultType="org.zerock.domain.BoardVO">
+  	SELECT
+  	 bno bno,
+  	 title title,
+  	 content content,
+  	 writer writer,
+  	 regdate regdate,
+  	 updatedate updatedate 
+  	FROM tbl_board
+  	WHERE bno = #{bno}
+  </select>
+  
+  <delete id = "delete">
+  	DELETE FROM tbl_board WHERE bno = #{bno}
+  </delete>
+  
+  <update id="update">
+  	UPDATE tbl_board
+  	SET
+  		title = #{title},
+  		content = #{content},
+  		writer = #{writer},
+  		updateDate = NOW()
+  	WHERE	
+  		bno = #{bno}
+  </update>
+  
+
+</mapper>
