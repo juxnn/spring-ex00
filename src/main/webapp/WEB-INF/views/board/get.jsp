@@ -11,12 +11,21 @@
 
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<script>
+var appRoot = "${appRoot}";
+var boardBno = "${board.bno}";
+</script>
+<script src="${appRoot}/resources/js/get.js"></script>
+
+
 </head>
 <body>
 <bd:navbar></bd:navbar>
 
 <div class="container">
 
+<div id="alert1" class="alert alert-primary fade" role="alert">
+</div>
 
 	<h1>글 보기</h1>
 	
@@ -32,6 +41,12 @@
 					<textarea readonly id="textarea1" class="form-control"
 					 name="content"><c:out value="${board.content }"/></textarea>
 				</div>
+				<c:if test="${not empty board.fileName }">
+					<div>
+						<img class="img-fluid" src="${imgRoot}${board.bno }/${board.fileName}">
+					</div>
+				</c:if>
+				
 				<div class="form-group">
 					<label for="input2">작성자</label>
 					<input readonly id="input2" class="form-control" name="writer" value="${board.writer }">
@@ -51,5 +66,86 @@
 		</div>
 	</div>	
 </div>
+<div class="container">
+	<div class="row">
+		<div class="col-12">
+			<h3>댓글</h3>
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reply-insert-modal">댓글 작성</button>
+			<div id="reply-list-container">
+			
+			<ul class="list-unstyled" id="reply-list-container">
+		  	</ul>
+			
+			</div>
+		</div>
+	</div>
+</div>
+
+<%-- 댓글 입력 모달 --%>
+
+<div class="modal fade" id="reply-insert-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">새 댓글</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <input type="text" value="${board.bno }" readonly hidden id="reply-bno-input1">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">작성자</label>
+            <input type="text" class="form-control" id="reply-replyer-input1">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">댓글</label>
+            <textarea class="form-control" id="reply-reply-textarea1"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id="reply-insert-btn1" type="button" class="btn btn-primary">댓글 입력</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%-- 수정, 삭제 div 모달 --%>
+<div class="modal fade" id="reply-modify-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">댓글 수정/삭제</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <input type="text" value="" readonly hidden id="reply-rno-input2">
+          <input type="text" value="${board.bno }" readonly hidden id="reply-bno-input2"> 
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">작성자</label>
+            <input type="text" class="form-control" id="reply-replyer-input2" readonly>
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">댓글</label>
+            <textarea class="form-control" id="reply-reply-textarea2"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button id="reply-modify-btn1" type="button" class="btn btn-primary">댓글 수정</button>
+        <button id="reply-delete-btn1" type="button" class="btn btn-danger">댓글 삭제</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 </body>
 </html>

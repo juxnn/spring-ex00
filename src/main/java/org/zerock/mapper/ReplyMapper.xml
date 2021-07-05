@@ -50,4 +50,10 @@
 		bno = #{bno}
 	ORDER BY rno ASC
 </select>
+
+<select id="deleteByBno">
+	DELETE FROM tbl_reply
+	WHERE bno = #{bno}
+</select>
+
 </mapper>

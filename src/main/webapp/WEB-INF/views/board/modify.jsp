@@ -22,6 +22,26 @@ $(document).ready(function(){
 			$("#modify-form1").submit();
 		}
 	});
+	
+	$("#file-remove-btn").click(function(){
+		if(confirm("파일 삭제하시겠습니까?")){
+			$("#input4").attr("style",  "text-decoration:line-through");
+			$("#img1").attr("hidden", "hidden");
+			$("#file-return-btn").removeAttr("hidden");
+			$("#file-check").val("delete");
+			$(this).attr("hidden", "hidden");
+		}
+	})
+	$("#file-return-btn").click(function(){
+		if(confirm("파일 되돌리시겠습니까?")){
+			$("#img1").removeAttr("hidden");
+			$("#input4").removeAttr("style");
+			$("#file-remove-btn").removeAttr("hidden");
+			$("#file-check").val("exist");
+			$(this).attr("hidden", "hidden");
+		}
+	})
+	
 });
 </script>
 
@@ -34,7 +54,7 @@ $(document).ready(function(){
 	
 	<div class="row">
 		<div class="col-12">
-			<form id="modify-form1" action="${appRoot }/board/modify" method="post">
+			<form id="modify-form1" action="${appRoot }/board/modify" method="post" enctype="multipart/form-data">
 				<input hidden name="bno" value="${board.bno }" />
 				<div class="form-group">
 					<label for="input1">제목</label>
@@ -45,11 +65,28 @@ $(document).ready(function(){
 					<textarea id="textarea1" class="form-control" 
 					name="content"><c:out value="${board.content }" /></textarea>
 				</div>
+				<c:if test="${not empty board.fileName }">
+					<div id="img1">
+						<img class="img-fluid" src="${imgRoot}${board.bno }/${board.fileName}">
+					</div>
+					<div>
+						<label for="input4">현재 파일: </label>
+						<input id="input4" type="text" value="${board.fileName }" readonly>
+						<input id="file-remove-btn" type="button" value="삭제">
+						<input id="file-return-btn" type="button" value="되돌리기" hidden>
+					</div>
+				</c:if>
+				
+				<div class="form-group">
+					<label for="input3">파일</label>
+					<input id="input3" class="form-control" type="file" name="file" accept="image/*">
+				</div>
 				<div class="form-group">
 					<label for="input2">작성자</label>
 					<input readonly="readonly" value="${board.writer }" id="input2" class="form-control" name="writer">
 				</div>				
 				
+				<input hidden value="" id="file-check" name="fileCheck">
 				<input hidden name="pageNum" value="${cri.pageNum }"/>
 				<input hidden name="amount" value="${cri.amount }"/>
 				<input hidden name="type" value="${cri.type }"/>

@@ -53,7 +53,6 @@ $(document).ready(function(){
 					<td>${board.bno }</td>
 					<td>
 					
-					
 					<c:url value="/board/get" var="getUrl">
 						<c:param name="bno" value="${board.bno }" />
 						<c:param name="pageNum" value="${pageMaker.cri.pageNum }" />
@@ -61,11 +60,12 @@ $(document).ready(function(){
 						<c:param name="type" value="${pageMaker.cri.type }" />
 						<c:param name="keyword" value="${pageMaker.cri.keyword }" />
 					</c:url>
-					
-					
-					
+	
 					<a href="${getUrl}">
 						${board.title }
+						<c:if test= "${board.replyCnt > 0 }">
+							[${board.replyCnt }]
+						</c:if>
 					</a>
 					</td>
 					<td>${board.writer }</td>

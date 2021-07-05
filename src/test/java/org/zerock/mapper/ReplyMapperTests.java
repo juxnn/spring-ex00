@@ -82,5 +82,12 @@ public class ReplyMapperTests {
 		bno = 49L;
 		list = mapper.getList(bno);
 		assertTrue(list.size() == 0);
-		}
+	}
+	
+	@Test
+	public void testDelteByBno() {
+		Long bno = 123L;
+		mapper.deleteByBno(bno);
+		
+	}
 }
