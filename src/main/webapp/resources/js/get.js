@@ -10,8 +10,31 @@
 			success: function (reply) {
 				$("#reply-rno-input2").val(reply.rno);
 				$("#reply-replyer-input2").val(reply.replyer);
+				$("#reply-replyerName-input2").val(reply.replyerName);
 				$("#reply-reply-textarea2").val(reply.reply);
+				
+				//댓글 작성자와 로그인 유저가 같지 않으면
+				// 수정/삭제 버튼 삭제
+				
+				if(userid != reply.replyer){
+					$("#reply-modify-modal")
+						.find("#reply-modify-delete-btn-wrapper")
+						.hide();
+						
+					$("#reply-reply-textarea2")
+						.attr("readonly", "readonly");
+							
+				}else{
+					$("#reply-modify-modal")
+						.find("#reply-modify-delete-btn-wrapper")
+						.show();
+					
+					$("#reply-reply-textarea2")
+						.removeAttr("readonly");	
+						
+				}
 				$("#reply-modify-modal").modal("show");
+				
 			},
 			error: function(){
 				console.log("댓글 가져오기 실패");
@@ -27,7 +50,7 @@
 			var replyHTML = `
 			<li class="media" id="reply${reply.rno}" data-rno="${reply.rno}">
 				<div class="media-body">
-					<h5 class="my-4">${reply.replyer}</h5>
+					<h5 class="my-4">${reply.replyerName}</h5>
 					<p>${reply.reply}</p>
 					<small>${new Date(reply.replyDate).toISOString().split("T")[0]}</small><hr>
 				</div>
@@ -146,13 +169,23 @@
 	})
 	/* 댓글 삭제 버튼 처리 */
 	$("#reply-delete-btn1").click(function(){
-		var rno = $("#reply-rno-input2").val();
 		var check = confirm("삭제하시겠습니까?");
 		
 		if(check){
+		
+		var rno = $("#reply-rno-input2").val();
+		var replyer = $("#reply-replyer-input2").val();
+		
+		var data = {
+			rno: rno,
+			replyer: replyer,
+		};
+		
 			$.ajax({
 				type: "delete",
 				url: appRoot + "/replies/"+ rno,
+				data: JSON.stringify(data),
+				contentType: "application/json",
 				success: function(){
 					console.log("삭제 성공");
 					$('#reply-insert-modal').modal('hide');
